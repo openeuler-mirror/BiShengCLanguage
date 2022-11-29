@@ -1,0 +1,8 @@
+[submodule "compiler/OpenArkCompiler"]
+	path = compiler/OpenArkCompiler
+	url = https://gitee.com/bisheng_c_language_dep/OpenArkCompiler.git
+  branch = bishengc
+[submodule "fe/llvm-project"]
+	path = fe/llvm-project
+	url = https://gitee.com/bisheng_c_language_dep/llvm-project.git
+	branch = bishengc/12.0.1
