@@ -8,7 +8,7 @@ SUB_LLVM_BUILD_DIR=${SUB_LLVM_DIR}/build
 SUB_LLVM_INSTALL_DIR=${SUB_LLVM_DIR}/install
 SUB_OAC_DIR=${ROOT_DIR}/compiler/OpenArkCompiler
 TARGET=${SUB_OAC_DIR}/tools/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-18.04-enhanced
-THREADS=$(cat /proc/cpuinfo | grep -c processor)
+THREADS=$(cat /proc/cpuinfo | grep -c processor) # FIXME: this does not work for macos
 
 function build_llvm() {
   cd ${SUB_LLVM_DIR}
@@ -49,11 +49,14 @@ function update_submodule() {
 }
 
 function main() {
+  echo "Start Building"
+  echo $(pwd)
   update_submodule
   build_llvm
   copy_files
   build_oac
   copy_output
+  echo "Built Successfully"
 }
 
 main "$@"
