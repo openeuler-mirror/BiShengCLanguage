@@ -1,11 +1,7 @@
-# BiShengCLanguage
+# BSC
 
 #### 介绍
-BiSheng C Language is next generation language for system programming.
-
-#### 软件架构
-软件架构说明
-
+BSC Language is the next generation language for system programming.
 
 #### 安装教程
 
