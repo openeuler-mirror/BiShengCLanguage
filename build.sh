@@ -22,8 +22,8 @@ function build_llvm() {
 
 function copy_files() {
   mkdir -p ${TARGET}/bin
-  cp -r ${SUB_LLVM_DIR}/install/bin ${TARGET}/bin
-  cp -r ${SUB_LLVM_DIR}/build/bin/FileCheck ${TARGET}/bin
+  cp -r ${SUB_LLVM_DIR}/install/bin/* ${TARGET}/bin/
+  cp -r ${SUB_LLVM_DIR}/build/bin/FileCheck ${TARGET}/bin/
   cp -r ${SUB_LLVM_DIR}/install/include ${TARGET}
   cp -r ${SUB_LLVM_DIR}/install/lib ${TARGET}
   cp -r ${SUB_LLVM_DIR}/install/libexec ${TARGET}
