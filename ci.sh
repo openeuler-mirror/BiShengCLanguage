@@ -89,6 +89,8 @@ function get_branch_code() {
 
 function get_owner_info() {
   cd ${ROOT_DIR}
+  tree
+  pwd
   tmp=`sed -n '/^owner:/p' llvm.commitid`
   LLVM_OWNER=${tmp#*:}
   tmp=`sed -n '/^branch:/p' llvm.commitid`
