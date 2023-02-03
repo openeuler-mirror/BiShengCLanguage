@@ -59,7 +59,7 @@ function install_tools() {
 
 function get_branch_code() {
   rm -rf ${SUB_LLVM_DIR}
-  cd ${SUB_LLVM_DIR}/..
+  cd ${ROOT_DIR}/fe
   if [ ${LLVM_OWNER} != "" ]; then
     git clone https://gitee.com/${LLVM_OWNER}/llvm-project.git
     cd ${SUB_LLVM_DIR}
@@ -73,7 +73,7 @@ function get_branch_code() {
   fi
 
   rm -rf ${SUB_OAC_DIR}
-  cd ${SUB_OAC_DIR}/..
+  cd ${ROOT_DIR}/compiler
   if [ ${OAC_OWNER} != "" ]; then
     git clone https://gitee.com/${OAC_OWNER}/OpenArkCompiler.git
     cd ${SUB_OAC_DIR}
