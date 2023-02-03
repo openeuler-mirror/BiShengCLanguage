@@ -66,7 +66,7 @@ function get_branch_code() {
     git remote add upstream https://gitee.com/bisheng_c_language_dep/OpenArkCompiler
     git checkout -b ${LLVM_BRANCH} origin/${LLVM_BRANCH}
     git merge upstream/bishenghc/12.0.1
-  elif
+  else
     git clone https://gitee.com/bisheng_c_language_dep/OpenArkCompiler.git
     cd ${SUB_LLVM_DIR}
     git checkout -b bishenghc/12.0.1 origin/bishenghc/12.0.1
@@ -80,7 +80,7 @@ function get_branch_code() {
     git remote add upstream https://gitee.com/bisheng_c_language_dep/llvm-project
     git checkout -b ${OAC_BRANCH} origin/${OAC_BRANCH}
     git merge upstream/bishengc
-  elif
+  else
     git clone https://gitee.com/bisheng_c_language_dep/llvm-project.git
     cd ${SUB_OAC_DIR}
     git checkout -b bishengc
