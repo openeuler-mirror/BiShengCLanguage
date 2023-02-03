@@ -54,7 +54,7 @@ function update_submodule() {
 }
 
 function install_tools() {
-  yum -y install python3 cmake git
+  sudo yum -y install python3 cmake git
 }
 
 function get_branch_code() {
