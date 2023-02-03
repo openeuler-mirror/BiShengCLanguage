@@ -63,9 +63,9 @@ function get_branch_code() {
   if [ ${LLVM_OWNER} != "" ]; then
     git clone https://gitee.com/${LLVM_OWNER}/llvm-project.git
     cd ${SUB_LLVM_DIR}
-    git remote add upstream https://gitee.com/bisheng_c_language_dep/OpenArkCompiler
+    git remote add upstream https://gitee.com/bisheng_c_language_dep/OpenArkCompiler.git
     git checkout -b ${LLVM_BRANCH} origin/${LLVM_BRANCH}
-    git merge upstream/bishenghc/12.0.1
+    git merge origin/bishenghc/12.0.1
   else
     git clone https://gitee.com/bisheng_c_language_dep/OpenArkCompiler.git
     cd ${SUB_LLVM_DIR}
@@ -77,9 +77,9 @@ function get_branch_code() {
   if [ ${OAC_OWNER} != "" ]; then
     git clone https://gitee.com/${OAC_OWNER}/OpenArkCompiler.git
     cd ${SUB_OAC_DIR}
-    git remote add upstream https://gitee.com/bisheng_c_language_dep/llvm-project
+    git remote add upstream https://gitee.com/bisheng_c_language_dep/llvm-project.git
     git checkout -b ${OAC_BRANCH} origin/${OAC_BRANCH}
-    git merge upstream/bishengc
+    git merge origin/bishengc
   else
     git clone https://gitee.com/bisheng_c_language_dep/llvm-project.git
     cd ${SUB_OAC_DIR}
@@ -99,6 +99,33 @@ function get_owner_info() {
   OAC_BRANCH=${tmp#*:}
 }
 
+function start_ci_test() {
+  cd ${SUB_OAC_DIR}
+  source build/envsetup.sh arm release
+  mm c_test/gdb_test
+  mm c_test/tsvc_test
+  mm c_test/cf3_test
+  mm c_test/ast_test
+  mm c_test/sanity_test
+  mm c_test/gtorture_test
+  mm c_test/unit_test
+  mm c_test/super_test
+  mm c_test/supertestv2_test
+  mm c_test/enhancec_test
+  mm c_test/noinline_test
+  mm c_test/super_opt_test
+  mm c_test/driver_test
+  mm c_test/llvm_test
+  mm c_test/stackprotest_test
+  mm c_test/struct_test
+  mm c_test/mplir_test
+  mm c_test/atomic_test
+  mm c_test/neon_test
+  mm c_test/shared_lib_test
+  mm c_test/outline_test
+  mm c_test/arm_builtin_function_test
+}
+
 function main() {
   echo "Start Building"
   echo $(pwd)
@@ -108,6 +135,7 @@ function main() {
   build_llvm
   copy_files
   build_oac
+  start_ci_test
   copy_output
   echo "Built Successfully"
 }
