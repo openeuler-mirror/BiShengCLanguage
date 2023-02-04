@@ -141,8 +141,6 @@ def create_branch(refs, branch_name, url):
 		pass
 	return False
 		
-
-
 if __name__ == '__main__':
 	usage = "Usage: %prog -l llvm_id -o oac_id or %prog --merge -b bsc_id"
 	description = ""
