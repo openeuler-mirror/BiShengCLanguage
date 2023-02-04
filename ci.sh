@@ -93,8 +93,6 @@ function get_branch_code() {
 
 function get_owner_info() {
   cd ${ROOT_DIR}
-  echo `pwd`
-  ls
   tmp=`sed -n '/^owner:/p' llvm.commitid`
   LLVM_OWNER=${tmp#*:}
   tmp=`sed -n '/^branch:/p' llvm.commitid`
@@ -112,28 +110,7 @@ function get_owner_info() {
 function start_ci_test() {
   cd ${SUB_OAC_DIR}
   source build/envsetup.sh arm release
-  mm c_test/gdb_test
-  mm c_test/tsvc_test
-  mm c_test/cf3_test
-  mm c_test/ast_test
-  mm c_test/sanity_test
-  mm c_test/gtorture_test
-  mm c_test/unit_test
-  mm c_test/super_test
-  mm c_test/supertestv2_test
-  mm c_test/enhancec_test
-  mm c_test/noinline_test
-  mm c_test/super_opt_test
-  mm c_test/driver_test
-  mm c_test/llvm_test
-  mm c_test/stackprotest_test
-  mm c_test/struct_test
-  mm c_test/mplir_test
-  mm c_test/atomic_test
-  mm c_test/neon_test
-  mm c_test/shared_lib_test
-  mm c_test/outline_test
-  mm c_test/arm_builtin_function_test
+  mm c_test
 }
 
 function main() {
