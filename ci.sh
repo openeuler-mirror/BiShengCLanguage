@@ -62,22 +62,22 @@ function install_tools() {
 function get_branch_code() {
   rm -rf ${SUB_LLVM_DIR}
   cd ${ROOT_DIR}/fe
-  if [ ${LLVM_COMMITID} != "" ]; then
+  if [ "${LLVM_COMMITID}" == "" ]; then
     git clone https://gitee.com/${LLVM_OWNER}/llvm-project.git
     cd ${SUB_LLVM_DIR}
     git remote add upstream https://gitee.com/bisheng_c_language_dep/llvm-project.git
     git fetch upstream
     git checkout -b ${LLVM_BRANCH} origin/${LLVM_BRANCH}
-    git rebase upstream/bishenghc/12.0.1
+    git rebase upstream/bishengc/12.0.1
   else
     git clone https://gitee.com/bisheng_c_language_dep/llvm-project.git
     cd ${SUB_LLVM_DIR}
-    git checkout -b bishenghc/12.0.1 origin/bishenghc/12.0.1
+    git checkout -b bishenghc/12.0.1 origin/bishengc/12.0.1
   fi
-
+  echo 0
   rm -rf ${SUB_OAC_DIR}
   cd ${ROOT_DIR}/compiler
-  if [ ${OAC_COMMITID} != "" ]; then
+  if [ "${OAC_COMMITID}" == "" ]; then
     git clone https://gitee.com/${OAC_OWNER}/OpenArkCompiler.git
     cd ${SUB_OAC_DIR}
     git remote add upstream https://gitee.com/bisheng_c_language_dep/OpenArkCompiler.git
@@ -94,6 +94,7 @@ function get_branch_code() {
 function get_owner_info() {
   cd ${ROOT_DIR}
   echo `pwd`
+  ls
   tmp=`sed -n '/^owner:/p' llvm.commitid`
   LLVM_OWNER=${tmp#*:}
   tmp=`sed -n '/^branch:/p' llvm.commitid`
@@ -141,11 +142,11 @@ function main() {
   install_tools
   get_owner_info
   get_branch_code
-  #build_llvm
-  #copy_files
-  #build_oac
-  #start_ci_test
-  #copy_output
+  build_llvm
+  copy_files
+  build_oac
+  start_ci_test
+  copy_output
   echo "Built Successfully"
 }
 
