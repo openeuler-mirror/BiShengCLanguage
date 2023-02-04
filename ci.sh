@@ -111,3 +111,5 @@ function main() {
   copy_output
   echo "Built Successfully"
 }
+
+main "$@"
