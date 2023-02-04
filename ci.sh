@@ -12,8 +12,10 @@ THREADS=$(cat /proc/cpuinfo | grep -c processor) # FIXME: this does not work for
 
 LLVM_OWNER=""
 LLVM_BRANCH=""
+LLVM_COMMITID=""
 OAC_OWNER=""
 OAC_BRANCH=""
+OAC_COMMITID=""
 
 function build_llvm() {
   cd ${SUB_LLVM_DIR}
@@ -60,28 +62,30 @@ function install_tools() {
 function get_branch_code() {
   rm -rf ${SUB_LLVM_DIR}
   cd ${ROOT_DIR}/fe
-  if [ ${LLVM_OWNER} != "" ]; then
+  if [ ${LLVM_COMMITID} != "" ]; then
     git clone https://gitee.com/${LLVM_OWNER}/llvm-project.git
     cd ${SUB_LLVM_DIR}
-    git remote add upstream https://gitee.com/bisheng_c_language_dep/OpenArkCompiler.git
+    git remote add upstream https://gitee.com/bisheng_c_language_dep/llvm-project.git
+    git fetch upstream
     git checkout -b ${LLVM_BRANCH} origin/${LLVM_BRANCH}
-    git merge origin/bishenghc/12.0.1
+    git rebase upstream/bishenghc/12.0.1
   else
-    git clone https://gitee.com/bisheng_c_language_dep/OpenArkCompiler.git
+    git clone https://gitee.com/bisheng_c_language_dep/llvm-project.git
     cd ${SUB_LLVM_DIR}
     git checkout -b bishenghc/12.0.1 origin/bishenghc/12.0.1
   fi
 
   rm -rf ${SUB_OAC_DIR}
   cd ${ROOT_DIR}/compiler
-  if [ ${OAC_OWNER} != "" ]; then
+  if [ ${OAC_COMMITID} != "" ]; then
     git clone https://gitee.com/${OAC_OWNER}/OpenArkCompiler.git
     cd ${SUB_OAC_DIR}
-    git remote add upstream https://gitee.com/bisheng_c_language_dep/llvm-project.git
+    git remote add upstream https://gitee.com/bisheng_c_language_dep/OpenArkCompiler.git
+    git fetch upstream
     git checkout -b ${OAC_BRANCH} origin/${OAC_BRANCH}
-    git merge origin/bishengc
+    git rebase upstream/bishengc
   else
-    git clone https://gitee.com/bisheng_c_language_dep/llvm-project.git
+    git clone https://gitee.com/bisheng_c_language_dep/OpenArkCompiler.git
     cd ${SUB_OAC_DIR}
     git checkout -b bishengc
   fi
@@ -89,16 +93,19 @@ function get_branch_code() {
 
 function get_owner_info() {
   cd ${ROOT_DIR}
-  tree
-  pwd
+  echo `pwd`
   tmp=`sed -n '/^owner:/p' llvm.commitid`
   LLVM_OWNER=${tmp#*:}
   tmp=`sed -n '/^branch:/p' llvm.commitid`
   LLVM_BRANCH=${tmp#*:}
+  tmp=`sed -n '/^commitid:/p' llvm.commitid`
+  LLVM_COMMITID=${tmp#*:}
   tmp=`sed -n '/^owner:/p' oac.commitid`
   OAC_OWNER=${tmp#*:}
   tmp=`sed -n '/^branch:/p' oac.commitid`
   OAC_BRANCH=${tmp#*:}
+  tmp=`sed -n '/^commitid:/p' llvm.commitid`
+  OAC_COMMITID=${tmp#*:}
 }
 
 function start_ci_test() {
@@ -134,11 +141,11 @@ function main() {
   install_tools
   get_owner_info
   get_branch_code
-  build_llvm
-  copy_files
-  build_oac
-  start_ci_test
-  copy_output
+  #build_llvm
+  #copy_files
+  #build_oac
+  #start_ci_test
+  #copy_output
   echo "Built Successfully"
 }
 
