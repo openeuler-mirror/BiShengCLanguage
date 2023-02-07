@@ -22,7 +22,8 @@ function build_llvm() {
   mkdir -p build
   mkdir -p install
   cd build
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install/ -DLLVM_TARGETS_TO_BUILD="X86;AArch64" -DLLVM_ENABLE_PROJECTS="clang;lld" -DLLVM_USE_LINKER=gold -DLLVM_BUILD_DOCS=Off -DLLVM_ENABLE_BINDINGS=Off -G "Unix Makefiles" ../llvm
+  #cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install/ -DLLVM_TARGETS_TO_BUILD="X86;AArch64" -DLLVM_ENABLE_PROJECTS="clang;lld" -DLLVM_USE_LINKER=gold -DLLVM_BUILD_DOCS=Off -DLLVM_ENABLE_BINDINGS=Off -G "Unix Makefiles" ../llvm
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install/ -DLLVM_TARGETS_TO_BUILD="all" -DLLVM_ENABLE_PROJECTS="clang;lld;openmp;compiler-rt" -DLLVM_USE_LINKER=gold -DLLVM_BUILD_DOCS=Off -DLLVM_ENABLE_BINDINGS=Off -G "Unix Makefiles" ../llvm > cmake.log 2>&1
   make -j${THREADS} | tee ${ROOT_DIR}/build_llvm.log
   make install
 }
@@ -118,7 +119,6 @@ function main() {
   git config --global user.email "sunzibo@huawei.com"
   git config --global user.name "sunzibo"
   install_tools
-  cmake --version
   get_owner_info
   get_branch_code
   build_llvm
