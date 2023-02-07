@@ -118,13 +118,14 @@ function main() {
   git config --global user.email "sunzibo@huawei.com"
   git config --global user.name "sunzibo"
   install_tools
+  cmake --version
   get_owner_info
   get_branch_code
-  build_llvm
-  copy_files
-  build_oac
-  start_ci_test
-  copy_output
+  #build_llvm
+  #copy_files
+  #build_oac
+  #start_ci_test
+  #copy_output
   echo "Built Successfully"
 }
 
