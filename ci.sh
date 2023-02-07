@@ -56,7 +56,7 @@ function update_submodule() {
 }
 
 function install_tools() {
-  sudo yum -y install python3 cmake git g++ dkms
+  sudo yum -y install python3 cmake git g++ dkms dpkg
   sudo ln -sf /usr/lib/dkms/lsb_release /usr/bin/lsb_release
 }
 
