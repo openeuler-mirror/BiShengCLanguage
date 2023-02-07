@@ -22,8 +22,7 @@ function build_llvm() {
   mkdir -p build
   mkdir -p install
   cd build
-  #cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install/ -DLLVM_TARGETS_TO_BUILD="X86;AArch64" -DLLVM_ENABLE_PROJECTS="clang;lld" -DLLVM_USE_LINKER=gold -DLLVM_BUILD_DOCS=Off -DLLVM_ENABLE_BINDINGS=Off -G "Unix Makefiles" ../llvm
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install/ -DLLVM_TARGETS_TO_BUILD="all" -DLLVM_ENABLE_PROJECTS="clang;lld;openmp;compiler-rt" -DLLVM_USE_LINKER=gold -DLLVM_BUILD_DOCS=Off -DLLVM_ENABLE_BINDINGS=Off -G "Unix Makefiles" ../llvm > cmake.log 2>&1
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install/ -DLLVM_TARGETS_TO_BUILD="X86;AArch64" -DLLVM_ENABLE_PROJECTS="clang;lld" -DLLVM_USE_LINKER=gold -DLLVM_BUILD_DOCS=Off -DLLVM_ENABLE_BINDINGS=Off -G "Unix Makefiles" ../llvm
   make -j${THREADS} | tee ${ROOT_DIR}/build_llvm.log
   make install
 }
@@ -75,7 +74,7 @@ function get_branch_code() {
     cd ${SUB_LLVM_DIR}
     git checkout -b bishenghc/12.0.1 origin/bishengc/12.0.1
   fi
-  echo 0
+
   rm -rf ${SUB_OAC_DIR}
   cd ${ROOT_DIR}/compiler
   if [ "${OAC_COMMITID}" == "" ]; then
