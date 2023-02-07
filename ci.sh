@@ -117,6 +117,9 @@ function main() {
   echo "Start Building"
   git config --global user.email "sunzibo@huawei.com"
   git config --global user.name "sunzibo"
+
+  sudo cat /etc/os-release
+
   install_tools
   get_owner_info
   get_branch_code
