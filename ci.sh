@@ -118,7 +118,7 @@ function main() {
   git config --global user.email "sunzibo@huawei.com"
   git config --global user.name "sunzibo"
 
-  sudo cat /etc/os-release
+  sudo g++ --version
 
   install_tools
   get_owner_info
