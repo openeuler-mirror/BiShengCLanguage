@@ -103,7 +103,7 @@ function get_owner_info() {
   OAC_OWNER=${tmp#*:}
   tmp=`sed -n '/^branch:/p' oac.commitid`
   OAC_BRANCH=${tmp#*:}
-  tmp=`sed -n '/^commitid:/p' llvm.commitid`
+  tmp=`sed -n '/^commitid:/p' oac.commitid`
   OAC_COMMITID=${tmp#*:}
 }
 
@@ -115,8 +115,8 @@ function start_ci_test() {
 
 function main() {
   echo "Start Building"
-  git config --global user.email "jiangqunchao@huawei.com"
-  git config --global user.name "jiang-qunchao"
+  git config --global user.email "sunzibo@huawei.com"
+  git config --global user.name "sunzibo"
   install_tools
   get_owner_info
   get_branch_code

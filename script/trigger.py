@@ -46,7 +46,7 @@ def BiShengCLanguage_ci_start(opt):
 			global oac_branch
 			global oac_owner
 			oac_branch, oac_owner = handle_pr_value(oac_PR, "llvm", opt.oac_id)
-			
+	
 	if opt.llvm_id and opt.oac_id:
 		new_branch_name = 'ci_llvm_{0}_oac_{1}'.format(opt.llvm_id, opt.oac_id)
 	bsc_PR = create_BiShengCLanguage_PR(opt)
@@ -82,7 +82,7 @@ def create_BiShengCLanguage_PR(opt):
 			if opt.oac_id:
 				title = title + 'oac id : {}'.format(opt.oac_id)
 				filename = 'oac.commitid'
-				file = set_file(filename, opt.oac_id, loac_owner, oac_branch)
+				file = set_file(filename, opt.oac_id, oac_owner, oac_branch)
 		print("start create_BiShengCLanguage_PR!")
 		url = 'https://gitee.com/api/v5/repos/{}/BiShengCLanguage/pulls'.format(source_owner)
 		data_value = '"access_token":"{1}","title":"{2}","head":"{0}:{3}","base":"master","prune_source_branch":"true","squash":"true"'.format(ci_forks_owner, access_token, title, new_branch_name)
@@ -122,7 +122,7 @@ def set_file(filename, PRID, owner, branch):
 			parser.error('set {} failed!'.format(filename))
 			print(response.json())
 			return False
-		return True
+		return response
 	except Exception:
 		pass
 	return False
