@@ -115,7 +115,8 @@ function start_ci_test() {
 
 function main() {
   echo "Start Building"
-  echo $(pwd)
+  git config --global user.email "jiangqunchao@huawei.com"
+  git config --global user.name "jiang-qunchao"
   install_tools
   get_owner_info
   get_branch_code
