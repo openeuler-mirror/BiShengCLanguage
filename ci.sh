@@ -56,7 +56,7 @@ function update_submodule() {
 }
 
 function install_tools() {
-  sudo yum -y install python3 cmake git
+  sudo yum -y install python3 cmake git g++
 }
 
 function get_branch_code() {
@@ -117,9 +117,6 @@ function main() {
   echo "Start Building"
   git config --global user.email "sunzibo@huawei.com"
   git config --global user.name "sunzibo"
-
-  sudo g++ --version
-
   install_tools
   get_owner_info
   get_branch_code
