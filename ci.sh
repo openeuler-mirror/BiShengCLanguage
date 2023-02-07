@@ -88,7 +88,7 @@ function get_branch_code() {
   else
     git clone https://gitee.com/bisheng_c_language_dep/OpenArkCompiler.git
     cd ${SUB_OAC_DIR}
-    git checkout -b bishengc
+    git checkout -b bishengc origin/bishengc
   fi
 }
 
