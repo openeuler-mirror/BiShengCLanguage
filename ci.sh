@@ -59,6 +59,7 @@ function install_tools() {
   sudo yum -y install python3 cmake git g++ dkms dpkg rsync glibc-devel glibc
   sudo ln -sf /usr/lib/dkms/lsb_release /usr/bin/lsb_release
   sudo ln -sf ${ROOT_DIR}/libtinfo.so.5.9 /lib64/libtinfo.so.5
+  ls /usr/include/gnu/
 }
 
 function get_branch_code() {
