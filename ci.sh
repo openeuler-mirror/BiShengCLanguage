@@ -41,7 +41,7 @@ function build_oac() {
   cd ${SUB_OAC_DIR}
   source build/envsetup.sh arm release
   make setup
-  make -j${THREADS} | tee ${ROOT_DIR}/build_oac.log
+  make | tee ${ROOT_DIR}/build_oac.log
 }
 
 function copy_output() {
