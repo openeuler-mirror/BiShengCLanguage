@@ -111,7 +111,7 @@ function get_owner_info() {
 
 function start_ci_test() {
   cd ${SUB_OAC_DIR}
-  ll ${SUB_OAC_DIR}/output/aarch64-clang-release/bin/
+  ls ${SUB_OAC_DIR}/output/aarch64-clang-release/bin/
   source build/envsetup.sh arm release
   #mm c_test
   cd testsuite/c_test/ast_test/AST0053-NEON-Vaddq
