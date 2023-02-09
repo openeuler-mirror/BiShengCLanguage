@@ -59,7 +59,14 @@ function install_tools() {
   sudo yum -y install python3 cmake git g++ dkms dpkg rsync glibc-devel glibc
   sudo ln -sf /usr/lib/dkms/lsb_release /usr/bin/lsb_release
   sudo ln -sf ${ROOT_DIR}/libtinfo.so.5.9 /lib64/libtinfo.so.5
-  ls /usr/include/gnu/
+  sudo mv /etc/yum.repos.d/openEuler.repo /etc/yum.repos.d/openEuler.repo.backup
+  sudo cp -rf ${ROOT_DIR}/script/Centos-Base.repo /etc/yum.repos.d/
+  yum clean all
+  yum makecache
+  yum -y install glibc-devel.i686
+  pip install paramiko
+  sudo rm -rf /etc/yum.repos.d/Centos-Base.repo
+  sudo mv /etc/yum.repos.d/openEuler.repo.backup /etc/yum.repos.d/openEuler.repo
 }
 
 function get_branch_code() {
