@@ -6,15 +6,6 @@ headers = {'Content-Type':'application/json', 'charset':'UTF-8'}
 llvm_project = 'bisheng_c_language_dep/llvm-project'
 oac_project = 'bisheng_c_language_dep/OpenArkCompiler'
 
-def creaate_ci_processing_label():
-	print("start post label:ci_processing!")
-
-def replace_ci_successful_label():
-	print("start post label:ci_successful!")
-
-def replace_ci_failed_label():
-	print("start post label:ci_failed!")
-
 def check_response(response):
 	if not response:
 		print(response.json())
