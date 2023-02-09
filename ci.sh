@@ -59,7 +59,6 @@ function install_tools() {
   sudo yum -y install python3 cmake git g++ dkms dpkg rsync glibc-devel glibc
   sudo ln -sf /usr/lib/dkms/lsb_release /usr/bin/lsb_release
   sudo ln -sf ${ROOT_DIR}/libtinfo.so.5.9 /lib64/libtinfo.so.5
-  ls /etc/yum.repos.d/
   sudo mv /etc/yum.repos.d/openEuler.repo /etc/yum.repos.d/openEuler.repo.backup
   sudo cp -rf ${ROOT_DIR}/script/Centos-Base.repo /etc/yum.repos.d/
   sudo yum clean all
@@ -122,9 +121,7 @@ function start_ci_test() {
   cd ${SUB_OAC_DIR}
   ls ${SUB_OAC_DIR}/output/aarch64-clang-release/bin/
   source build/envsetup.sh arm release
-  #mm c_test
-  cd testsuite/c_test/ast_test/AST0053-NEON-Vaddq
-  mm MODE=ASTO2
+  mm c_test
 }
 
 function main() {
