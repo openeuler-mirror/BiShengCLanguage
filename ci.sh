@@ -61,13 +61,11 @@ function install_tools() {
   sudo ln -sf ${ROOT_DIR}/libtinfo.so.5.9 /lib64/libtinfo.so.5
   sudo mv /etc/yum.repos.d/openEuler.repo /etc/yum.repos.d/openEuler.repo.backup
   sudo cp -rf ${ROOT_DIR}/script/Centos-Base.repo /etc/yum.repos.d/
-  sudo yum clean all
   sudo yum makecache
   sudo yum -y install glibc-devel.i686
   sudo pip install paramiko
   sudo rm -rf /etc/yum.repos.d/Centos-Base.repo
   sudo mv /etc/yum.repos.d/openEuler.repo.backup /etc/yum.repos.d/openEuler.repo
-  sudo yum clean all
   sudo yum makecache
 }
 
