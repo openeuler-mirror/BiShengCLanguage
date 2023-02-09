@@ -11,8 +11,10 @@ ci_forks_owner = 'sunzibo'
 
 llvm_branch = None
 llvm_owner = None
+llvm_PR_url = None
 oac_branch = None
 oac_owner = None
+oac_PR_url = None
 new_branch_name = None
 
 def options(opt):
@@ -23,12 +25,17 @@ def options(opt):
 	
 def BiShengCLanguage_ci_start(opt):
 	global new_branch_name
+	llvm_PR_url = None
+	oac_PR_url = None
+	new_PR_comment
 	if opt.llvm_id:
 		new_branch_name = 'ci_llvm_{}'.format(opt.llvm_id)
+		llvm_PR_url = 'https://gitee.com/bisheng_c_language_dep/llvm-project/pulls/{0}'.format(opt.llvm_id)
+		new_PR_comment = 'llvm_PR_url:{}\n'.format(llvm_PR_url)
 		url = 'https://gitee.com/api/v5/repos/bisheng_c_language_dep/llvm-project/pulls/{0}?access_token={1}'.format(opt.llvm_id, access_token)
 		llvm_PR = get_PR(url)
 		if not llvm_PR:
-			parser.error("bisheng_c_language_dep/llvm-project does not has PR"+opt.llvm_id)
+			parser.error('bisheng_c_language_dep/llvm-project does not has PR{}'.format(opt.llvm_id))
 			return False
 		else:
 			global llvm_branch
@@ -37,19 +44,37 @@ def BiShengCLanguage_ci_start(opt):
 			
 	if opt.oac_id:
 		new_branch_name = 'ci_oac_{}'.format(opt.oac_id)
+		oac_PR_url = 'https://gitee.com/bisheng_c_language_dep/OpenArkCompiler/pulls/{0}'.format(opt.oac_id)
+		new_PR_comment += 'oac_PR_url:{}'.format(oac_PR_url)
 		url = 'https://gitee.com/api/v5/repos/bisheng_c_language_dep/OpenArkCompiler/pulls/{0}?access_token={1}'.format(opt.oac_id, access_token)
 		oac_PR = get_PR(url)
 		if not oac_PR:
-			parser.error("bisheng_c_language_dep/OpenArkCompiler does not has PR"+opt.oac_id)
+			parser.error('bisheng_c_language_dep/OpenArkCompiler does not has PR{}'.format(opt.oac_id))
 			return False
 		else:
 			global oac_branch
 			global oac_owner
 			oac_branch, oac_owner = handle_pr_value(oac_PR, "llvm", opt.oac_id)
-	
+
 	if opt.llvm_id and opt.oac_id:
 		new_branch_name = 'ci_llvm_{0}_oac_{1}'.format(opt.llvm_id, opt.oac_id)
 	bsc_PR = create_BiShengCLanguage_PR(opt)
+	commit_url_to_newPR(bsc_PR.json()['id'], new_PR_comment)
+
+def commit_url_to_newPR(id, comment):
+	try:
+		url = 'https://gitee.com/api/v5/repos/{0}/{1}/pulls/{2}/comments'.format(source_owner, repo, id)
+		print(url)
+		data_value = '"access_token":"{0}","body":"{1}"'.format(access_token, comment)
+		data = '{'+data_value+'}'
+		response = requests.post(url, data=data, headers=headers)
+		if not response:
+			print("error:commit url to newPR failed!")
+			print(response.json())
+		return response
+	except Exception:
+			pass
+	return False
 
 def handle_pr_value(pr_value, source, pr_id):
 	state = pr_value.json()['state']
@@ -83,13 +108,13 @@ def create_BiShengCLanguage_PR(opt):
 				title = title + 'oac id : {}'.format(opt.oac_id)
 				filename = 'oac.commitid'
 				file = set_file(filename, opt.oac_id, oac_owner, oac_branch)
-		print("start create_BiShengCLanguage_PR!")
+		print("start create BiShengCLanguage PR!")
 		url = 'https://gitee.com/api/v5/repos/{}/BiShengCLanguage/pulls'.format(source_owner)
 		data_value = '"access_token":"{1}","title":"{2}","head":"{0}:{3}","base":"master","prune_source_branch":"true","squash":"true"'.format(ci_forks_owner, access_token, title, new_branch_name)
 		data = '{'+data_value+'}'
 		response = requests.post(url, data=data, headers=headers)
 		if not response:
-			print("error:create_BiShengCLanguage_PR failed!")
+			print("error:create BiShengCLanguage PR failed!")
 			print(response.json())
 		return response
 	except Exception:
