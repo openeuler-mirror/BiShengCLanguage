@@ -63,6 +63,7 @@ function install_tools() {
   sudo cp -rf ${ROOT_DIR}/script/Centos-Base.repo /etc/yum.repos.d/
   sudo yum makecache
   sudo yum -y install glibc-devel.i686
+  sudo pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
   sudo pip install paramiko
   sudo rm -rf /etc/yum.repos.d/Centos-Base.repo
   sudo mv /etc/yum.repos.d/openEuler.repo.backup /etc/yum.repos.d/openEuler.repo
