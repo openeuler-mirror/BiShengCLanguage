@@ -58,16 +58,12 @@ function update_submodule() {
 function install_tools() {
   sudo yum -y install python3 cmake git g++ dkms dpkg rsync glibc-devel glibc
   sudo ln -sf /usr/lib/dkms/lsb_release /usr/bin/lsb_release
-  sudo ln -sf ${ROOT_DIR}/libtinfo.so.5.9 /lib64/libtinfo.so.5
-  sudo mv /etc/yum.repos.d/openEuler.repo /etc/yum.repos.d/openEuler.repo.backup
   sudo cp -rf ${ROOT_DIR}/script/Centos-Base.repo /etc/yum.repos.d/
   sudo yum makecache
-  sudo yum -y install glibc-devel.i686
+  sudo yum -y install glibc-devel.i686 ncurses-compat-libs
+  sudo ln -sf /lib64/libtinfo.so.5.9 /lib64/libtinfo.so.5
   sudo pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
   sudo pip install paramiko
-  sudo rm -rf /etc/yum.repos.d/Centos-Base.repo
-  sudo mv /etc/yum.repos.d/openEuler.repo.backup /etc/yum.repos.d/openEuler.repo
-  sudo yum makecache
 }
 
 function get_branch_code() {
