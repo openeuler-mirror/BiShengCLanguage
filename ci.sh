@@ -145,6 +145,7 @@ function post_label() {
 
 function main() {
   echo "Start Building"
+  test
   git config --global user.email "sunzibo@huawei.com"
   git config --global user.name "sunzibo"
   install_tools
