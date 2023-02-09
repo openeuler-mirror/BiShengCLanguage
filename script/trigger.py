@@ -3,14 +3,11 @@ import optparse
 import os
 import base64
 
-#access_token = '351cdbba0be5979dda44b94e396f255c'
-access_token = '611854afe7485ddc6fd7ca98c2b01954'
+access_token = '351cdbba0be5979dda44b94e396f255c'
 headers = {'Content-Type':'application/json', 'charset':'UTF-8'}
-#source_owner = 'sunzibo'
 source_owner = 'openeuler'
 repo = 'BiShengCLanguage'
-ci_forks_owner = 'jiang-qunchao'
-#ci_forks_owner = 'sunzibo'
+ci_forks_owner = 'sunzibo'
 
 llvm_branch = None
 llvm_owner = None
@@ -29,13 +26,16 @@ def options(opt):
 def BiShengCLanguage_ci_start(opt):
 	global new_branch_name
 	llvm_PR_url = None
+	llvm_PR_api_url = None
 	oac_PR_url = None
+	oac_PR_api_url = None
 	new_PR_comment = None
 	if opt.llvm_id:
 		new_branch_name = 'ci_llvm_{}'.format(opt.llvm_id)
 		llvm_PR_url = 'https://gitee.com/bisheng_c_language_dep/llvm-project/pulls/{0}'.format(opt.llvm_id)
 		new_PR_comment = 'llvm_PR_url:{}\n'.format(llvm_PR_url)
-		url = 'https://gitee.com/api/v5/repos/bisheng_c_language_dep/llvm-project/pulls/{0}?access_token={1}'.format(opt.llvm_id, access_token)
+		llvm_PR_api_url = 'https://gitee.com/api/v5/repos/bisheng_c_language_dep/llvm-project/pulls/{}'.format(opt.llvm_id)
+		url = '{0}?access_token={1}'.format(llvm_PR_api_url, access_token)
 		llvm_PR = get_PR(url)
 		if not llvm_PR:
 			parser.error('bisheng_c_language_dep/llvm-project does not has PR{}'.format(opt.llvm_id))
@@ -49,7 +49,8 @@ def BiShengCLanguage_ci_start(opt):
 		new_branch_name = 'ci_oac_{}'.format(opt.oac_id)
 		oac_PR_url = 'https://gitee.com/bisheng_c_language_dep/OpenArkCompiler/pulls/{0}'.format(opt.oac_id)
 		new_PR_comment += 'oac_PR_url:{}'.format(oac_PR_url)
-		url = 'https://gitee.com/api/v5/repos/bisheng_c_language_dep/OpenArkCompiler/pulls/{0}?access_token={1}'.format(opt.oac_id, access_token)
+		oac_PR_api_url = 'https://gitee.com/api/v5/repos/bisheng_c_language_dep/OpenArkCompiler/pulls/{}'.format(opt.oac_id)
+		url = '{0}?access_token={1}'.format(oac_PR_api_url, access_token)
 		oac_PR = get_PR(url)
 		if not oac_PR:
 			parser.error('bisheng_c_language_dep/OpenArkCompiler does not has PR{}'.format(opt.oac_id))
@@ -62,17 +63,15 @@ def BiShengCLanguage_ci_start(opt):
 	if opt.llvm_id and opt.oac_id:
 		new_branch_name = 'ci_llvm_{0}_oac_{1}'.format(opt.llvm_id, opt.oac_id)
 	bsc_PR = create_BiShengCLanguage_PR(opt)
-	print(bsc_PR.json())
 	bsc_PR_url = bsc_PR.json()['url']
-	print(bsc_PR_url)
 	comment_url_to_PR(bsc_PR_url, new_PR_comment)
-	bsc_comment = 'bsc_PR_url:{}'.format(bsc_PR_url)
+	bsc_comment = 'bsc_PR_url:{}'.format(bsc_PR.json()['html_url'])
 	if opt.llvm_id:
-		comment_url_to_PR(llvm_PR_url, bsc_comment)
+		comment_url_to_PR(llvm_PR_api_url, bsc_comment)
 	if opt.oac_id:
-		comment_url_to_PR(oac_PR_url, bsc_comment)
+		comment_url_to_PR(oac_PR_api_url, bsc_comment)
 
-def commit_url_to_PR(url, comment):
+def comment_url_to_PR(url, comment):
 	try:
 		print("start commit url to PR!")
 		url = '{}/comments'.format(url)
