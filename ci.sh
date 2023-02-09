@@ -10,6 +10,9 @@ SUB_OAC_DIR=${ROOT_DIR}/compiler/OpenArkCompiler
 TARGET=${SUB_OAC_DIR}/tools/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-18.04-enhanced
 THREADS=$(cat /proc/cpuinfo | grep -c processor) # FIXME: this does not work for macos
 
+LLVM_PRID=""
+OAC_PRID=""
+
 LLVM_OWNER=""
 LLVM_BRANCH=""
 LLVM_COMMITID=""
@@ -100,12 +103,16 @@ function get_branch_code() {
 
 function get_owner_info() {
   cd ${ROOT_DIR}
+  tmp=`sed -n '/^PRID:/p' llvm.commitid`
+  LLVM_PRID=${tmp#*:}
   tmp=`sed -n '/^owner:/p' llvm.commitid`
   LLVM_OWNER=${tmp#*:}
   tmp=`sed -n '/^branch:/p' llvm.commitid`
   LLVM_BRANCH=${tmp#*:}
   tmp=`sed -n '/^commitid:/p' llvm.commitid`
   LLVM_COMMITID=${tmp#*:}
+  tmp=`sed -n '/^PRID:/p' oac.commitid`
+  OAC_PRID=${tmp#*:}
   tmp=`sed -n '/^owner:/p' oac.commitid`
   OAC_OWNER=${tmp#*:}
   tmp=`sed -n '/^branch:/p' oac.commitid`
@@ -121,18 +128,35 @@ function start_ci_test() {
   mm c_test
 }
 
+function post_label() {
+  tmp="python3 script/postlabel.py $1"
+  if [ "${LLVM_COMMITID}" == "" ]; then
+    tmp="${tmp} ${LLVM_PRID}"
+  else
+    tmp="${tmp} -1"
+  fi
+  if [ "${OAC_COMMITID}" == "" ]; then
+    tmp="${tmp} ${OAC_PRID}"
+  else
+    tmp="${tmp} -1"
+  fi
+  ${tmp}
+}
+
 function main() {
   echo "Start Building"
   git config --global user.email "sunzibo@huawei.com"
   git config --global user.name "sunzibo"
   install_tools
   get_owner_info
+  post_label "ci_processing"
   get_branch_code
   build_llvm
   copy_files
   build_oac
   start_ci_test
   copy_output
+  post_label "ci_successful"
   echo "Built Successfully"
 }
 
