@@ -149,6 +149,7 @@ function main() {
   git config --global user.name "sunzibo"
   install_tools
   get_owner_info
+  cd ${ROOT_DIR}
   post_label "ci_processing"
   get_branch_code
   build_llvm
@@ -156,6 +157,7 @@ function main() {
   build_oac
   start_ci_test
   copy_output
+  cd ${ROOT_DIR}
   post_label "ci_successful"
   echo "Built Successfully"
 }
