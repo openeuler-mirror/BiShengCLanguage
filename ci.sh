@@ -67,6 +67,8 @@ function install_tools() {
   sudo pip install paramiko
   sudo rm -rf /etc/yum.repos.d/Centos-Base.repo
   sudo mv /etc/yum.repos.d/openEuler.repo.backup /etc/yum.repos.d/openEuler.repo
+  sudo yum clean all
+  sudo yum makecache
 }
 
 function get_branch_code() {
