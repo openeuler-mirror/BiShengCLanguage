@@ -3,11 +3,14 @@ import optparse
 import os
 import base64
 
-access_token = '351cdbba0be5979dda44b94e396f255c'
+#access_token = '351cdbba0be5979dda44b94e396f255c'
+access_token = '611854afe7485ddc6fd7ca98c2b01954'
 headers = {'Content-Type':'application/json', 'charset':'UTF-8'}
+#source_owner = 'sunzibo'
 source_owner = 'openeuler'
 repo = 'BiShengCLanguage'
-ci_forks_owner = 'sunzibo'
+ci_forks_owner = 'jiang-qunchao'
+#ci_forks_owner = 'sunzibo'
 
 llvm_branch = None
 llvm_owner = None
@@ -27,7 +30,7 @@ def BiShengCLanguage_ci_start(opt):
 	global new_branch_name
 	llvm_PR_url = None
 	oac_PR_url = None
-	new_PR_comment
+	new_PR_comment = None
 	if opt.llvm_id:
 		new_branch_name = 'ci_llvm_{}'.format(opt.llvm_id)
 		llvm_PR_url = 'https://gitee.com/bisheng_c_language_dep/llvm-project/pulls/{0}'.format(opt.llvm_id)
@@ -59,17 +62,25 @@ def BiShengCLanguage_ci_start(opt):
 	if opt.llvm_id and opt.oac_id:
 		new_branch_name = 'ci_llvm_{0}_oac_{1}'.format(opt.llvm_id, opt.oac_id)
 	bsc_PR = create_BiShengCLanguage_PR(opt)
-	commit_url_to_newPR(bsc_PR.json()['id'], new_PR_comment)
+	print(bsc_PR.json())
+	bsc_PR_url = bsc_PR.json()['url']
+	print(bsc_PR_url)
+	comment_url_to_PR(bsc_PR_url, new_PR_comment)
+	bsc_comment = 'bsc_PR_url:{}'.format(bsc_PR_url)
+	if opt.llvm_id:
+		comment_url_to_PR(llvm_PR_url, bsc_comment)
+	if opt.oac_id:
+		comment_url_to_PR(oac_PR_url, bsc_comment)
 
-def commit_url_to_newPR(id, comment):
+def commit_url_to_PR(url, comment):
 	try:
-		url = 'https://gitee.com/api/v5/repos/{0}/{1}/pulls/{2}/comments'.format(source_owner, repo, id)
-		print(url)
+		print("start commit url to PR!")
+		url = '{}/comments'.format(url)
 		data_value = '"access_token":"{0}","body":"{1}"'.format(access_token, comment)
 		data = '{'+data_value+'}'
 		response = requests.post(url, data=data, headers=headers)
 		if not response:
-			print("error:commit url to newPR failed!")
+			print("error:commit url to PR failed!")
 			print(response.json())
 		return response
 	except Exception:
