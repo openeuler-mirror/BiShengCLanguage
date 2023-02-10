@@ -43,6 +43,8 @@ def start_post_label(project, id, label):
 		create_label(project, id, label)
 	elif label == 'ci_successful' or label == 'ci_failed':
 		delete_label(project, id, 'ci_processing')
+        delete_label(project, id, 'ci_successful')
+        delete_label(project, id, 'ci_failed')
 		create_label(project, id, label)
 	else:
 		print("please post right label!(ci_processing or ci_successful or ci_failed)")
