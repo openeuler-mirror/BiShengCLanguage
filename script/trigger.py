@@ -19,11 +19,20 @@ new_branch_name = None
 def options(opt):
 	opt.add_argument('--llvm', help='llvm PR id. This option is required')
 	opt.add_argument('--oac', help='oac PR id. This option is required')
-	opt.add_argument('--merge', '-m', action='store_true', dest='merge', help='merge.')
+	opt.add_argument('--merge', action='store_true', dest='merge', help='merge.')
 	opt.add_argument('--bsc', help='bsc PR id. This option is required')
-	
+
+def check_response(response):
+    if response.status_code >= 200 and response.status_code < 300:
+        print("Sending succeed!")
+	else:
+		print(response.json())
+		parser.error("Sending failed!")
+
 def BiShengCLanguage_ci_start(opt):
 	global new_branch_name
+    global llvm_branch
+    global llvm_owner
 	llvm_PR_url = None
 	llvm_PR_api_url = None
 	oac_PR_url = None
@@ -40,8 +49,6 @@ def BiShengCLanguage_ci_start(opt):
 			parser.error('bisheng_c_language_dep/llvm-project does not has PR{}'.format(opt.llvm))
 			return False
 		else:
-			global llvm_branch
-			global llvm_owner
 			llvm_branch, llvm_owner = handle_pr_value(llvm_PR, "llvm", opt.llvm)
 			
 	if opt.oac:
@@ -55,8 +62,6 @@ def BiShengCLanguage_ci_start(opt):
 			parser.error('bisheng_c_language_dep/OpenArkCompiler does not has PR{}'.format(opt.oac))
 			return False
 		else:
-			global oac_branch
-			global oac_owner
 			oac_branch, oac_owner = handle_pr_value(oac_PR, "llvm", opt.oac)
 
 	if opt.llvm and opt.oac:
@@ -77,9 +82,7 @@ def comment_url_to_PR(url, comment):
 		data_value = '"access_token":"{0}","body":"{1}"'.format(access_token, comment)
 		data = '{'+data_value+'}'
 		response = requests.post(url, data=data, headers=headers)
-		if not response:
-			print("error:commit url to PR failed!")
-			print(response.json())
+		check_response(response)
 		return response
 	except Exception:
 			pass
@@ -122,9 +125,7 @@ def create_BiShengCLanguage_PR(opt):
 		data_value = '"access_token":"{1}","title":"{2}","head":"{0}:{3}","base":"master","prune_source_branch":"true","squash":"true"'.format(ci_forks_owner, access_token, title, new_branch_name)
 		data = '{'+data_value+'}'
 		response = requests.post(url, data=data, headers=headers)
-		if not response:
-			print("error:create BiShengCLanguage PR failed!")
-			print(response.json())
+		check_response(response)
 		return response
 	except Exception:
 			pass
@@ -136,10 +137,7 @@ def set_file(filename, PRID, owner, branch):
 	try:
 		print("start getfile " + filename)
 		response = requests.get(url_get_file, headers=headers)
-		if not response:
-			parser.error('get {} failed!'.format(filename))
-			print(response.json())
-			return False
+		check_response(response)
 
 		print("start setfile " + filename)
 		sha = response.json()['sha']
@@ -152,10 +150,7 @@ def set_file(filename, PRID, owner, branch):
 		data_value = '"access_token":"{0}","content":"{1}","sha":"{2}","message":"{3}","branch":"{4}"'.format(access_token, content, sha, message, new_branch_name)
 		data = '{'+data_value+'}'
 		response = requests.put(url_set_file, data=data, headers=headers)
-		if not response:
-			parser.error('set {} failed!'.format(filename))
-			print(response.json())
-			return False
+		check_response(response)
 		return response
 	except Exception:
 		pass
@@ -167,9 +162,7 @@ def create_branch(refs, branch_name, url):
 		data_value = '"access_token":"{0}","refs":"{1}","branch_name":"{2}"'.format(access_token, refs, branch_name)
 		data = '{'+data_value+'}'
 		response = requests.post(url, data=data, headers=headers)
-		if not response:
-			print(response.json())
-			parser.error('create new ci branch failed!\nnew_branch_name:{}'.format(branch_name))
+		check_response(response)
 		return response
 	except Exception:
 		pass
