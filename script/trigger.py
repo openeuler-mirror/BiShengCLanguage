@@ -23,16 +23,16 @@ def options(opt):
 	opt.add_argument('--bsc', help='bsc PR id. This option is required')
 
 def check_response(response):
-    if response.status_code >= 200 and response.status_code < 300:
-        print("Sending succeed!")
+	if response.status_code >= 200 and response.status_code < 300:
+		print("Sending succeed!")
 	else:
 		print(response.json())
 		parser.error("Sending failed!")
 
 def BiShengCLanguage_ci_start(opt):
 	global new_branch_name
-    global llvm_branch
-    global llvm_owner
+	global llvm_branch
+	global llvm_owner
 	llvm_PR_url = None
 	llvm_PR_api_url = None
 	oac_PR_url = None
@@ -172,15 +172,16 @@ def merge_BiShengCLanguage_PR(opt):
 	parser.error("The development has not been completed!")
 
 def get_access_token():
-        global access_token
-        try:
-                f = open('/home/sun/jiangqunchao/BiShengCLanguage/token', 'r')
-                access_token = f.read().splitlines()[0]
-        except IOError as e:
-                print("IOError:",e) 
-        finally:
-                if f:
-                        f.close()
+	global access_token
+	try:
+		path = os.popen('realpath ~/token').read().splitlines()[0]
+		f = open(path, 'r')
+		access_token = f.read().splitlines()[0]
+	except IOError as e:
+		print("IOError:",e) 
+	finally:
+		if f:
+			f.close()
 		
 if __name__ == '__main__':
 	get_access_token()

@@ -7,12 +7,12 @@ llvm_project = 'bisheng_c_language_dep/llvm-project'
 oac_project = 'bisheng_c_language_dep/OpenArkCompiler'
 
 def check_response(response):
-    if response.status_code >= 200 and response.status_code < 300:
-        print("post succeed!")
+	if response.status_code >= 200 and response.status_code < 300:
+		print("post succeed!")
 	else:
 		print(response.json())
-		print("error:post does not has return!")
-        return False
+		print("error:post failed!")
+	return False
 
 def create_label(project, id, label):
 	try:
