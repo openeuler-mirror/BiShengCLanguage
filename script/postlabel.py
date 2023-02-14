@@ -11,8 +11,9 @@ def check_response(response):
 		print("post succeed!")
 	else:
 		print(response.json())
-		print("error:post failed!")
-	return False
+	    print("error:post failed!")
+	    return False
+    return True
 
 def create_label(project, id, label):
 	try:
