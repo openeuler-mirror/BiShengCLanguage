@@ -1,7 +1,7 @@
 import requests
 import sys
+import linecache
 
-access_token = '351cdbba0be5979dda44b94e396f255c'
 headers = {'Content-Type':'application/json', 'charset':'UTF-8'}
 llvm_project = 'bisheng_c_language_dep/llvm-project'
 oac_project = 'bisheng_c_language_dep/OpenArkCompiler'
@@ -49,10 +49,22 @@ def start_post_label(project, id, label):
 	else:
 		print("please post right label!(ci_processing or ci_successful or ci_failed)")
 
+def get_access_token():
+	global access_token
+	try:
+		f = open('/home/sun/jiangqunchao/BiShengCLanguage/token', 'r')
+		access_token = f.read()
+	except IOError as e:
+		print("IOError:",e) 
+	finally:
+		if f:
+			f.close()
+
 if __name__ == '__main__':
 	label = sys.argv[1]
 	llvm_id = sys.argv[2]
 	oac_id = sys.argv[3]
+	get_access_token()
 	if llvm_id != "-1":
 		start_post_label(llvm_project, llvm_id, label)
 	if oac_id != "-1":

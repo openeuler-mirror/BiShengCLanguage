@@ -3,7 +3,6 @@ import optparse
 import os
 import base64
 
-access_token = '351cdbba0be5979dda44b94e396f255c'
 headers = {'Content-Type':'application/json', 'charset':'UTF-8'}
 source_owner = 'openeuler'
 repo = 'BiShengCLanguage'
@@ -175,10 +174,23 @@ def create_branch(refs, branch_name, url):
 	except Exception:
 		pass
 	return False
+
 def merge_BiShengCLanguage_PR(opt):
 	parser.error("The development has not been completed!")
+
+def get_access_token():
+        global access_token
+        try:
+                f = open('/home/sun/jiangqunchao/BiShengCLanguage/token', 'r')
+                access_token = f.read()
+        except IOError as e:
+                print("IOError:",e) 
+        finally:
+                if f:
+                        f.close()
 		
 if __name__ == '__main__':
+	get_access_token()
 	usage = "Usage: %prog -l llvm_id -o oac_id or %prog --merge -b bsc_id"
 	description = ""
 	parser = optparse.OptionParser(usage, description=description)
