@@ -8,10 +8,10 @@ oac_project = 'bisheng_c_language_dep/OpenArkCompiler'
 
 def check_response(response):
 	if response.status_code >= 200 and response.status_code < 300:
-		print("post succeed!")
+		print("post label succeed!")
 	else:
 		print(response.json())
-	    print("error:post failed!")
+	    print("error:post label failed!")
 	    return False
     return True
 
