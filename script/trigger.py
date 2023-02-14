@@ -175,6 +175,8 @@ def create_branch(refs, branch_name, url):
 	except Exception:
 		pass
 	return False
+def merge_BiShengCLanguage_PR(opt):
+	parser.error("The development has not been completed!")
 		
 if __name__ == '__main__':
 	usage = "Usage: %prog -l llvm_id -o oac_id or %prog --merge -b bsc_id"

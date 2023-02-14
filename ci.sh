@@ -30,7 +30,7 @@ function build_llvm() {
   make install
 }
 
-function copy_files() {
+function install_llvm() {
   mkdir -p ${TARGET}/bin
   cp -r ${SUB_LLVM_DIR}/install/bin/* ${TARGET}/bin/
   cp -r ${SUB_LLVM_DIR}/build/bin/FileCheck ${TARGET}/bin/
@@ -44,7 +44,7 @@ function build_oac() {
   cd ${SUB_OAC_DIR}
   source build/envsetup.sh arm release
   make setup
-  make | tee ${ROOT_DIR}/build_oac.log
+  make 2>&1 | tee ${ROOT_DIR}/build_oac.log
 }
 
 function copy_output() {
@@ -153,7 +153,7 @@ function main() {
   post_label "ci_processing"
   get_branch_code
   build_llvm
-  copy_files
+  install_llvm
   build_oac
   start_ci_test
   copy_output
