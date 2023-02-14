@@ -1,6 +1,6 @@
 import requests
 import sys
-import linecache
+import argparse
 
 headers = {'Content-Type':'application/json', 'charset':'UTF-8'}
 llvm_project = 'bisheng_c_language_dep/llvm-project'
@@ -49,23 +49,19 @@ def start_post_label(project, id, label):
 	else:
 		print("please post right label!(ci_processing or ci_successful or ci_failed)")
 
-def get_access_token():
-	global access_token
-	try:
-		f = open('/home/sun/jiangqunchao/BiShengCLanguage/token', 'r')
-		access_token = f.read()
-	except IOError as e:
-		print("IOError:",e) 
-	finally:
-		if f:
-			f.close()
+def options(opt):
+	opt.add_argument('--llvm', default="-1", help='llvm PR id. This option is required')
+	opt.add_argument('--oac', default="-1", help='oac PR id. This option is required')
+	opt.add_argument('--label', help='label. This option is required')
+	opt.add_argument('--token', help='accsee token. This option is required')
 
 if __name__ == '__main__':
-	label = sys.argv[1]
-	llvm_id = sys.argv[2]
-	oac_id = sys.argv[3]
-	get_access_token()
-	if llvm_id != "-1":
-		start_post_label(llvm_project, llvm_id, label)
-	if oac_id != "-1":
-		start_post_label(oac_project, oac_id, label)
+	global access_token
+	parser = argparse.ArgumentParser()
+	options(parser)
+	args = parser.parse_args()
+	access_token = args.token
+	if args.llvm != "-1":
+		start_post_label(llvm_project, args.llvm, args.label)
+	if args.oac != "-1":
+		start_post_label(oac_project, args.oac, args.label)

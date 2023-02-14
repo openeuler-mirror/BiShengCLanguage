@@ -1,5 +1,5 @@
 import requests
-import optparse
+import argparse
 import os
 import base64
 
@@ -17,10 +17,10 @@ oac_PR_url = None
 new_branch_name = None
 
 def options(opt):
-	opt.add_option('--llvm_id', '-l', type='string', action='store', dest='llvm_id', help='llvm PR id. This option is required')
-	opt.add_option('--oac_id', '-o', type='string', action='store', dest='oac_id', help='oac PR id. This option is required')
-	opt.add_option('--merge', '-m', action='store_true', dest='merge', help='merge.')
-	opt.add_option('--bsc_id', '-b', type='string', action='store', dest='bsc_id', help='bsc PR id. This option is required')
+	opt.add_argument('--llvm', help='llvm PR id. This option is required')
+	opt.add_argument('--oac', help='oac PR id. This option is required')
+	opt.add_argument('--merge', '-m', action='store_true', dest='merge', help='merge.')
+	opt.add_argument('--bsc', help='bsc PR id. This option is required')
 	
 def BiShengCLanguage_ci_start(opt):
 	global new_branch_name
@@ -29,45 +29,45 @@ def BiShengCLanguage_ci_start(opt):
 	oac_PR_url = None
 	oac_PR_api_url = None
 	new_PR_comment = None
-	if opt.llvm_id:
-		new_branch_name = 'ci_llvm_{}'.format(opt.llvm_id)
-		llvm_PR_url = 'https://gitee.com/bisheng_c_language_dep/llvm-project/pulls/{0}'.format(opt.llvm_id)
+	if opt.llvm:
+		new_branch_name = 'ci_llvm_{}'.format(opt.llvm)
+		llvm_PR_url = 'https://gitee.com/bisheng_c_language_dep/llvm-project/pulls/{0}'.format(opt.llvm)
 		new_PR_comment = 'llvm_PR_url:{}\n'.format(llvm_PR_url)
-		llvm_PR_api_url = 'https://gitee.com/api/v5/repos/bisheng_c_language_dep/llvm-project/pulls/{}'.format(opt.llvm_id)
+		llvm_PR_api_url = 'https://gitee.com/api/v5/repos/bisheng_c_language_dep/llvm-project/pulls/{}'.format(opt.llvm)
 		url = '{0}?access_token={1}'.format(llvm_PR_api_url, access_token)
 		llvm_PR = get_PR(url)
 		if not llvm_PR:
-			parser.error('bisheng_c_language_dep/llvm-project does not has PR{}'.format(opt.llvm_id))
+			parser.error('bisheng_c_language_dep/llvm-project does not has PR{}'.format(opt.llvm))
 			return False
 		else:
 			global llvm_branch
 			global llvm_owner
-			llvm_branch, llvm_owner = handle_pr_value(llvm_PR, "llvm", opt.llvm_id)
+			llvm_branch, llvm_owner = handle_pr_value(llvm_PR, "llvm", opt.llvm)
 			
-	if opt.oac_id:
-		new_branch_name = 'ci_oac_{}'.format(opt.oac_id)
-		oac_PR_url = 'https://gitee.com/bisheng_c_language_dep/OpenArkCompiler/pulls/{0}'.format(opt.oac_id)
+	if opt.oac:
+		new_branch_name = 'ci_oac_{}'.format(opt.oac)
+		oac_PR_url = 'https://gitee.com/bisheng_c_language_dep/OpenArkCompiler/pulls/{0}'.format(opt.oac)
 		new_PR_comment += 'oac_PR_url:{}'.format(oac_PR_url)
-		oac_PR_api_url = 'https://gitee.com/api/v5/repos/bisheng_c_language_dep/OpenArkCompiler/pulls/{}'.format(opt.oac_id)
+		oac_PR_api_url = 'https://gitee.com/api/v5/repos/bisheng_c_language_dep/OpenArkCompiler/pulls/{}'.format(opt.oac)
 		url = '{0}?access_token={1}'.format(oac_PR_api_url, access_token)
 		oac_PR = get_PR(url)
 		if not oac_PR:
-			parser.error('bisheng_c_language_dep/OpenArkCompiler does not has PR{}'.format(opt.oac_id))
+			parser.error('bisheng_c_language_dep/OpenArkCompiler does not has PR{}'.format(opt.oac))
 			return False
 		else:
 			global oac_branch
 			global oac_owner
-			oac_branch, oac_owner = handle_pr_value(oac_PR, "llvm", opt.oac_id)
+			oac_branch, oac_owner = handle_pr_value(oac_PR, "llvm", opt.oac)
 
-	if opt.llvm_id and opt.oac_id:
-		new_branch_name = 'ci_llvm_{0}_oac_{1}'.format(opt.llvm_id, opt.oac_id)
+	if opt.llvm and opt.oac:
+		new_branch_name = 'ci_llvm_{0}_oac_{1}'.format(opt.llvm, opt.oac)
 	bsc_PR = create_BiShengCLanguage_PR(opt)
 	bsc_PR_url = bsc_PR.json()['url']
 	comment_url_to_PR(bsc_PR_url, new_PR_comment)
 	bsc_comment = 'bsc_PR_url:{}'.format(bsc_PR.json()['html_url'])
-	if opt.llvm_id:
+	if opt.llvm:
 		comment_url_to_PR(llvm_PR_api_url, bsc_comment)
-	if opt.oac_id:
+	if opt.oac:
 		comment_url_to_PR(oac_PR_api_url, bsc_comment)
 
 def comment_url_to_PR(url, comment):
@@ -109,14 +109,14 @@ def create_BiShengCLanguage_PR(opt):
 		create_branch_url = 'https://gitee.com/api/v5/repos/{0}/{1}/branches'.format(ci_forks_owner, repo)
 		if create_branch("master", new_branch_name, create_branch_url):
 			print("get file!")
-			if opt.llvm_id:
-				title = title + 'llvm id : {} '.format(opt.llvm_id)
+			if opt.llvm:
+				title = title + 'llvm id : {} '.format(opt.llvm)
 				filename = 'llvm.commitid'
-				file = set_file(filename, opt.llvm_id, llvm_owner, llvm_branch)
-			if opt.oac_id:
-				title = title + 'oac id : {}'.format(opt.oac_id)
+				file = set_file(filename, opt.llvm, llvm_owner, llvm_branch)
+			if opt.oac:
+				title = title + 'oac id : {}'.format(opt.oac)
 				filename = 'oac.commitid'
-				file = set_file(filename, opt.oac_id, oac_owner, oac_branch)
+				file = set_file(filename, opt.oac, oac_owner, oac_branch)
 		print("start create BiShengCLanguage PR!")
 		url = 'https://gitee.com/api/v5/repos/{}/BiShengCLanguage/pulls'.format(source_owner)
 		data_value = '"access_token":"{1}","title":"{2}","head":"{0}:{3}","base":"master","prune_source_branch":"true","squash":"true"'.format(ci_forks_owner, access_token, title, new_branch_name)
@@ -182,7 +182,7 @@ def get_access_token():
         global access_token
         try:
                 f = open('/home/sun/jiangqunchao/BiShengCLanguage/token', 'r')
-                access_token = f.read()
+                access_token = f.read().splitlines()[0]
         except IOError as e:
                 print("IOError:",e) 
         finally:
@@ -191,16 +191,12 @@ def get_access_token():
 		
 if __name__ == '__main__':
 	get_access_token()
-	usage = "Usage: %prog -l llvm_id -o oac_id or %prog --merge -b bsc_id"
-	description = ""
-	parser = optparse.OptionParser(usage, description=description)
+	parser = argparse.ArgumentParser()
 	options(parser)
-	opt, args = parser.parse_args()
-	if len(args) != 0:
-		parser.error("")
-	elif opt.llvm_id or opt.oac_id and not opt.merge and not opt.bsc_id:
+	opt = parser.parse_args()
+	if opt.llvm or opt.oac and not opt.merge and not opt.bsc:
 		BiShengCLanguage_ci_start(opt)
-	elif opt.merge and opt.bsc_id and not opt.llvm_id and not opt.oac_id:
+	elif opt.merge and opt.bsc and not opt.llvm and not opt.oac:
 		merge_BiShengCLanguage_PR(opt)
 	else:
 		parser.error("")

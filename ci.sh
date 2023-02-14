@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 set -e
 
 ROOT_DIR=$(cd "$(dirname $0)"; pwd)
@@ -10,6 +9,7 @@ SUB_OAC_DIR=${ROOT_DIR}/compiler/OpenArkCompiler
 TARGET=${SUB_OAC_DIR}/tools/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-18.04-enhanced
 THREADS=$(cat /proc/cpuinfo | grep -c processor) # FIXME: this does not work for macos
 
+access_token=$1
 LLVM_PRID=""
 OAC_PRID=""
 
@@ -129,24 +129,22 @@ function start_ci_test() {
 }
 
 function post_label() {
-  tmp="python3 script/postlabel.py $1"
+  tmp="python3 script/postlabel.py --token ${access_token} --label $1"
   if [ "${LLVM_COMMITID}" == "" ]; then
-    tmp="${tmp} ${LLVM_PRID}"
+    tmp="${tmp} --llvm ${LLVM_PRID}"
   else
-    tmp="${tmp} -1"
+    tmp="${tmp} --llvm -1"
   fi
   if [ "${OAC_COMMITID}" == "" ]; then
-    tmp="${tmp} ${OAC_PRID}"
+    tmp="${tmp} --oac ${OAC_PRID}"
   else
-    tmp="${tmp} -1"
+    tmp="${tmp} --oac -1"
   fi
   ${tmp}
 }
 
 function main() {
   echo "Start Building"
-  git config --global user.email "sunzibo@huawei.com"
-  git config --global user.name "sunzibo"
   install_tools
   get_owner_info
   cd ${ROOT_DIR}
