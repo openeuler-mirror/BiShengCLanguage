@@ -7,9 +7,12 @@ llvm_project = 'bisheng_c_language_dep/llvm-project'
 oac_project = 'bisheng_c_language_dep/OpenArkCompiler'
 
 def check_response(response):
-	if not response:
+    if response.status_code >= 200 and response.status_code < 300:
+        print("post succeed!")
+	else:
 		print(response.json())
 		print("error:post does not has return!")
+        return False
 
 def create_label(project, id, label):
 	try:
@@ -17,9 +20,9 @@ def create_label(project, id, label):
 		url = 'https://gitee.com/api/v5/repos/{0}/pulls/{1}/labels?access_token={2}'.format(project, id, access_token)
 		data = '[\"{}\"]'.format(label)
 		response = requests.post(url, data=data, headers=headers)
-		check_response(response)
-		print('post label:{} end!'.format(label))
-		return response
+		if check_response(response):
+		    print('post label:{} end!'.format(label))
+		    return response
 	except Exception:
 		pass
 	return False
@@ -29,9 +32,9 @@ def delete_label(project, id, label):
 		print('start delete label:{}!'.format(label))
 		url = 'https://gitee.com/api/v5/repos/{0}/pulls/{1}/labels/{2}?access_token={3}'.format(project, id, label, access_token)
 		response = requests.delete(url, headers=headers)
-		check_response(response)
-		print('delete label:{} end!'.format(label))
-		return response
+		if check_response(response):
+		    print('delete label:{} end!'.format(label))
+		    return response
 	except Exception:
 		pass
 	return False
