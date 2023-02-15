@@ -141,6 +141,10 @@ function post_label() {
     tmp="${tmp} --oac -1"
   fi
   ${tmp}
+  if [[ $? -ne 0 ]];then
+     cat make.log
+     exit 1
+  fi
 }
 
 function main() {
