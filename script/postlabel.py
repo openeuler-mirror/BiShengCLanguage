@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 import sys
 import argparse
@@ -41,7 +42,7 @@ def delete_label(project, id, label):
 	return None
 
 def start_post_label(project, id, label):
-    response = None
+	response = None
 	if label == 'ci_processing':
 		delete_label(project, id, 'ci_successful')
 		delete_label(project, id, 'ci_failed')
@@ -53,8 +54,8 @@ def start_post_label(project, id, label):
 		response = create_label(project, id, label)
 	else:
 		print("please post right label!(ci_processing or ci_successful or ci_failed)")
-    if not response:
-        sys.exit("Failed to send the tag. Check the PR and token.")
+	if not response:
+		sys.exit("Failed to send the tag. Check the PR and token.")
 
 def options(opt):
 	opt.add_argument('--llvm', default="-1", help='llvm PR id. This option is required')
