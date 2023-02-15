@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 
 ROOT_DIR=$(cd "$(dirname $0)"; pwd)
 SUB_LLVM_DIR=${ROOT_DIR}/fe/llvm-project
