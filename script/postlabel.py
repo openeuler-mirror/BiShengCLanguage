@@ -26,7 +26,7 @@ def create_label(project, id, label):
 		    return response
 	except Exception:
 		pass
-	return False
+	return None
 
 def delete_label(project, id, label):
 	try:
@@ -38,20 +38,23 @@ def delete_label(project, id, label):
 		    return response
 	except Exception:
 		pass
-	return False
+	return None
 
 def start_post_label(project, id, label):
+    response = None
 	if label == 'ci_processing':
 		delete_label(project, id, 'ci_successful')
 		delete_label(project, id, 'ci_failed')
-		create_label(project, id, label)
+		response = create_label(project, id, label)
 	elif label == 'ci_successful' or label == 'ci_failed':
 		delete_label(project, id, 'ci_processing')
 		delete_label(project, id, 'ci_successful')
 		delete_label(project, id, 'ci_failed')
-		create_label(project, id, label)
+		response = create_label(project, id, label)
 	else:
 		print("please post right label!(ci_processing or ci_successful or ci_failed)")
+    if not response:
+        sys.exit("Failed to send the tag. Check the PR and token.")
 
 def options(opt):
 	opt.add_argument('--llvm', default="-1", help='llvm PR id. This option is required')
