@@ -1,0 +1,12 @@
+[baseos]
+name=CentOS Stream $releasever - BaseOS
+baseurl=https://mirrors.ustc.edu.cn/centos-stream/9-stream/BaseOS/$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos/RPM-GPG-KEY-CentOS-Official
+[appstream]
+name=CentOS Stream $releasever - AppStream
+baseurl=https://mirrors.ustc.edu.cn/centos-stream/9-stream/AppStream/$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos/RPM-GPG-KEY-CentOS-Official
