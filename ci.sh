@@ -126,6 +126,7 @@ function start_ci_test() {
   ls ${SUB_OAC_DIR}/output/aarch64-clang-release/bin/
   source build/envsetup.sh arm release
   mm c_test
+  mm bsc_test
 }
 
 function post_label() {
