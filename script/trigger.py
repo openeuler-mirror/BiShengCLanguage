@@ -66,7 +66,7 @@ def BiShengCLanguage_ci_start(opt):
 			return False
 		else:
 			oac_branch, oac_owner = handle_pr_value(oac_PR, "oac", opt.oac)
-	
+
 	if opt.llvm and opt.oac:
 		new_branch_name = 'ci_llvm_{0}_oac_{1}'.format(opt.llvm, opt.oac)
 	bsc_PR = create_BiShengCLanguage_PR(opt)
