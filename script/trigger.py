@@ -34,11 +34,13 @@ def BiShengCLanguage_ci_start(opt):
 	global new_branch_name
 	global llvm_branch
 	global llvm_owner
+	global oac_owner
+	global oac_branch
 	llvm_PR_url = None
 	llvm_PR_api_url = None
 	oac_PR_url = None
 	oac_PR_api_url = None
-	new_PR_comment = None
+	new_PR_comment = ""
 	if opt.llvm:
 		new_branch_name = 'ci_llvm_{}'.format(opt.llvm)
 		llvm_PR_url = 'https://gitee.com/bisheng_c_language_dep/llvm-project/pulls/{0}'.format(opt.llvm)
@@ -63,7 +65,7 @@ def BiShengCLanguage_ci_start(opt):
 			parser.error('bisheng_c_language_dep/OpenArkCompiler does not has PR{}'.format(opt.oac))
 			return False
 		else:
-			oac_branch, oac_owner = handle_pr_value(oac_PR, "llvm", opt.oac)
+			oac_branch, oac_owner = handle_pr_value(oac_PR, "oac", opt.oac)
 
 	if opt.llvm and opt.oac:
 		new_branch_name = 'ci_llvm_{0}_oac_{1}'.format(opt.llvm, opt.oac)
