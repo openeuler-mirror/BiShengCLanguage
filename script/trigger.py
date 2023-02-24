@@ -3,7 +3,6 @@ import requests
 import argparse
 import os
 import base64
-import sys
 
 headers = {'Content-Type':'application/json', 'charset':'UTF-8'}
 source_owner = 'openeuler'
