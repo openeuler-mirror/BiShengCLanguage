@@ -52,8 +52,7 @@ def BiShengCLanguage_ci_start(opt):
 			parser.error('bisheng_c_language_dep/llvm-project does not has PR{}'.format(opt.llvm))
 			return False
 		else:
-			llvm_branch, llvm_owner = handle_pr_value(llvm_PR, "llvm", opt.llvm)
-			
+			llvm_branch, llvm_owner = handle_pr_value(llvm_PR, "llvm", opt.llvm)			
 	if opt.oac:
 		new_branch_name = 'ci_oac_{}'.format(opt.oac)
 		oac_PR_url = 'https://gitee.com/bisheng_c_language_dep/OpenArkCompiler/pulls/{0}'.format(opt.oac)
@@ -97,7 +96,7 @@ def handle_pr_value(pr_value, source, pr_id):
 		print("state:"+state)
 		parser.error('{0} PR {1} is not open!'.format(source, pr_id))
 	branch = pr_value.json()['head']['label']
-	owner = pr_value.json()['head']['user']['login']
+	owner = pr_value.json()['head']['repo']['namespace']['path']
 	return branch, owner
 	
 def get_PR(url):
@@ -115,14 +114,18 @@ def create_BiShengCLanguage_PR(opt):
 		create_branch_url = 'https://gitee.com/api/v5/repos/{0}/{1}/branches'.format(ci_forks_owner, repo)
 		if create_branch("master", new_branch_name, create_branch_url):
 			print("get file!")
+			filename = 'llvm.commitid'
 			if opt.llvm:
 				title = title + 'llvm id : {} '.format(opt.llvm)
-				filename = 'llvm.commitid'
 				file = set_file(filename, opt.llvm, llvm_owner, llvm_branch)
+			else:
+				set_file(filename, "", "", "")
+			filename = 'oac.commitid'
 			if opt.oac:
 				title = title + 'oac id : {}'.format(opt.oac)
-				filename = 'oac.commitid'
 				file = set_file(filename, opt.oac, oac_owner, oac_branch)
+			else:
+				set_file(filename, "", "", "")
 		print("start create BiShengCLanguage PR!")
 		url = 'https://gitee.com/api/v5/repos/{}/BiShengCLanguage/pulls'.format(source_owner)
 		data_value = '"access_token":"{1}","title":"{2}","head":"{0}:{3}","base":"master","prune_source_branch":"true","squash":"true"'.format(ci_forks_owner, access_token, title, new_branch_name)
@@ -145,11 +148,15 @@ def set_file(filename, PRID, owner, branch):
 		print("start setfile " + filename)
 		sha = response.json()['sha']
 		message = 'fix ' + filename
-		content = 'PRID:{0}\nowner:{1}\nbranch:{2}'.format(PRID, owner, branch)
+
+		if PRID != "":
+			content = 'PRID:{0}\nowner:{1}\nbranch:{2}'.format(PRID, owner, branch)
+		else:
+			content = 'commitid:None'
+
 		sample_string_bytes = content.encode("ascii")
 		base64_bytes = base64.b64encode(sample_string_bytes)
 		content = base64_bytes.decode("ascii")
-		
 		data_value = '"access_token":"{0}","content":"{1}","sha":"{2}","message":"{3}","branch":"{4}"'.format(access_token, content, sha, message, new_branch_name)
 		data = '{'+data_value+'}'
 		response = requests.put(url_set_file, data=data, headers=headers)
