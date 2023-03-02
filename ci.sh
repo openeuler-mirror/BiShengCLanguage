@@ -106,7 +106,7 @@ function get_owner_info() {
   git log > commit.log
   tmp=`sed -n '/_llvm_/p' commit.log`
   tmp=${tmp#*\_llvm\_}
-  llvm=${tmp%%\_}
+  llvm=${tmp%%\_*}
   tmp=`sed -n '/_oac_/p' commit.log`
   tmp=${tmp#*\_oac\_}
   oac=${tmp%% *}
