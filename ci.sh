@@ -106,10 +106,10 @@ function get_owner_info() {
   git log > commit.log
   tmp=`sed -n '/_llvm_/p' commit.log`
   tmp=${tmp#*\_llvm\_}
-  llvm=%{tmp%%\_}
+  llvm=${tmp%%\_}
   tmp=`sed -n '/_oac_/p' commit.log`
   tmp=${tmp#*\_oac\_}
-  oac=%{tmp%% *}
+  oac=${tmp%% *}
   if [ "${llvm}" != "" ]; then
     tmp=`sed -n '/^llvm_PRID:/p' commit/llvm.prid_${llvm}`
     LLVM_PRID=${tmp#*:}
@@ -117,6 +117,7 @@ function get_owner_info() {
     LLVM_OWNER=${tmp#*:}
     tmp=`sed -n '/^llvm_branch:/p' commit/llvm.prid_${llvm}`
     LLVM_BRANCH=${tmp#*:}
+    echo "LLVM_PRID:$LLVM_PRID  LLVM_OWNER:$LLVM_OWNER  LLVM_BRANCH:$LLVM_BRANCH"
   fi
   if [ "${oac}" != "" ]; then
     tmp=`sed -n '/^oac_PRID:/p' commit/oac.prid_${oac}`
@@ -125,6 +126,7 @@ function get_owner_info() {
     OAC_OWNER=${tmp#*:}
     tmp=`sed -n '/^oac_branch:/p' commit/oac.prid_${oac}`
     OAC_BRANCH=${tmp#*:}
+    echo "OAC_PRID:$OAC_PRID  OAC_OWNER:$OAC_OWNER  OAC_BRANCH:$OAC_BRANCH"
   fi
 }
 
