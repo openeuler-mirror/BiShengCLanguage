@@ -114,18 +114,14 @@ def create_BiShengCLanguage_PR(opt):
 		create_branch_url = 'https://gitee.com/api/v5/repos/{0}/{1}/branches'.format(ci_forks_owner, repo)
 		if create_branch("master", new_branch_name, create_branch_url):
 			print("get file!")
-			filename = 'llvm.commitid'
 			if opt.llvm:
+				filename = 'llvm.prid_{}'.format(opt.llvm)
 				title = title + 'llvm id : {} '.format(opt.llvm)
-				file = set_file(filename, opt.llvm, llvm_owner, llvm_branch)
-			else:
-				set_file(filename, "", "", "")
-			filename = 'oac.commitid'
+				file = create_file("llvm", filename, opt.llvm, llvm_owner, llvm_branch)
 			if opt.oac:
+				filename = 'oac.prid_{}'.format(opt.oac)
 				title = title + 'oac id : {}'.format(opt.oac)
-				file = set_file(filename, opt.oac, oac_owner, oac_branch)
-			else:
-				set_file(filename, "", "", "")
+				file = create_file("oac", filename, opt.oac, oac_owner, oac_branch)
 		print("start create BiShengCLanguage PR!")
 		url = 'https://gitee.com/api/v5/repos/{}/BiShengCLanguage/pulls'.format(source_owner)
 		data_value = '"access_token":"{1}","title":"{2}","head":"{0}:{3}","base":"master","prune_source_branch":"true","squash":"true"'.format(ci_forks_owner, access_token, title, new_branch_name)
@@ -136,7 +132,26 @@ def create_BiShengCLanguage_PR(opt):
 	except Exception:
 			pass
 	return False
-		
+
+def create_file(code, filename, PRID, owner, branch):
+	create_file_url = 'https://gitee.com/api/v5/repos/{0}/{1}/contents/commit%2F{2}'.format(ci_forks_owner, repo, filename)
+	try:
+		print("start createfile " + filename)
+		content = '{3}_PRID:{0}\n{3}_owner:{1}\n{3}_branch:{2}'.format(PRID, owner, branch, code)
+		message = 'add file ' + filename
+		sample_string_bytes = content.encode("ascii")
+		base64_bytes = base64.b64encode(sample_string_bytes)
+		content = base64_bytes.decode("ascii")
+
+		data_value = '"access_token":"{0}","content":"{1}","message":"{2}","branch":"{3}"'.format(access_token, content, message, new_branch_name)
+		data = '{'+data_value+'}'
+		response = requests.post(create_file_url, data=data, headers=headers)
+		check_response(response)
+		return response
+	except Exception:
+		pass
+	return False
+
 def set_file(filename, PRID, owner, branch):
 	url_get_file = 'https://gitee.com/api/v5/repos/{3}/{0}/contents/{1}?access_token={2}'.format(repo, filename, access_token, ci_forks_owner)
 	url_set_file = 'https://gitee.com/api/v5/repos/{2}/{0}/contents/{1}'.format(repo, filename, ci_forks_owner)

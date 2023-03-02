@@ -72,7 +72,7 @@ function install_tools() {
 function get_branch_code() {
   rm -rf ${SUB_LLVM_DIR}
   cd ${ROOT_DIR}/fe
-  if [ "${LLVM_COMMITID}" == "" ]; then
+  if [ "${LLVM_PRID}" != "" ]; then
     git clone https://gitee.com/${LLVM_OWNER}/llvm-project.git
     cd ${SUB_LLVM_DIR}
     git remote add upstream https://gitee.com/bisheng_c_language_dep/llvm-project.git
@@ -87,7 +87,7 @@ function get_branch_code() {
 
   rm -rf ${SUB_OAC_DIR}
   cd ${ROOT_DIR}/compiler
-  if [ "${OAC_COMMITID}" == "" ]; then
+  if [ "${OAC_PRID}" != "" ]; then
     git clone https://gitee.com/${OAC_OWNER}/OpenArkCompiler.git
     cd ${SUB_OAC_DIR}
     git remote add upstream https://gitee.com/bisheng_c_language_dep/OpenArkCompiler.git
@@ -103,22 +103,31 @@ function get_branch_code() {
 
 function get_owner_info() {
   cd ${ROOT_DIR}
-  tmp=`sed -n '/^PRID:/p' llvm.commitid`
-  LLVM_PRID=${tmp#*:}
-  tmp=`sed -n '/^owner:/p' llvm.commitid`
-  LLVM_OWNER=${tmp#*:}
-  tmp=`sed -n '/^branch:/p' llvm.commitid`
-  LLVM_BRANCH=${tmp#*:}
-  tmp=`sed -n '/^commitid:/p' llvm.commitid`
-  LLVM_COMMITID=${tmp#*:}
-  tmp=`sed -n '/^PRID:/p' oac.commitid`
-  OAC_PRID=${tmp#*:}
-  tmp=`sed -n '/^owner:/p' oac.commitid`
-  OAC_OWNER=${tmp#*:}
-  tmp=`sed -n '/^branch:/p' oac.commitid`
-  OAC_BRANCH=${tmp#*:}
-  tmp=`sed -n '/^commitid:/p' oac.commitid`
-  OAC_COMMITID=${tmp#*:}
+  git log > commit.log
+  tmp=`sed -n '/_llvm_/p' commit.log`
+  tmp=${tmp#*\_llvm\_}
+  llvm=${tmp%%\_}
+  tmp=`sed -n '/_oac_/p' commit.log`
+  tmp=${tmp#*\_oac\_}
+  oac=${tmp%% *}
+  if [ "${llvm}" != "" ]; then
+    tmp=`sed -n '/^llvm_PRID:/p' commit/llvm.prid_${llvm}`
+    LLVM_PRID=${tmp#*:}
+    tmp=`sed -n '/^llvm_owner:/p' commit/llvm.prid_${llvm}`
+    LLVM_OWNER=${tmp#*:}
+    tmp=`sed -n '/^llvm_branch:/p' commit/llvm.prid_${llvm}`
+    LLVM_BRANCH=${tmp#*:}
+    echo "LLVM_PRID:$LLVM_PRID  LLVM_OWNER:$LLVM_OWNER  LLVM_BRANCH:$LLVM_BRANCH"
+  fi
+  if [ "${oac}" != "" ]; then
+    tmp=`sed -n '/^oac_PRID:/p' commit/oac.prid_${oac}`
+    OAC_PRID=${tmp#*:}
+    tmp=`sed -n '/^oac_owner:/p' commit/oac.prid_${oac}`
+    OAC_OWNER=${tmp#*:}
+    tmp=`sed -n '/^oac_branch:/p' commit/oac.prid_${oac}`
+    OAC_BRANCH=${tmp#*:}
+    echo "OAC_PRID:$OAC_PRID  OAC_OWNER:$OAC_OWNER  OAC_BRANCH:$OAC_BRANCH"
+  fi
 }
 
 function start_ci_test() {
@@ -131,12 +140,12 @@ function start_ci_test() {
 
 function post_label() {
   tmp="python3 script/postlabel.py --token ${access_token} --label $1"
-  if [ "${LLVM_COMMITID}" == "" ]; then
+  if [ "${LLVM_PRID}" != "" ]; then
     tmp="${tmp} --llvm ${LLVM_PRID}"
   else
     tmp="${tmp} --llvm -1"
   fi
-  if [ "${OAC_COMMITID}" == "" ]; then
+  if [ "${OAC_PRID}" != "" ]; then
     tmp="${tmp} --oac ${OAC_PRID}"
   else
     tmp="${tmp} --oac -1"
