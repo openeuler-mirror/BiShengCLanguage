@@ -59,7 +59,7 @@ function update_submodule() {
 }
 
 function install_tools() {
-  sudo yum clean
+  sudo yum clean all
   sudo yum makecache
   sudo yum -y install python3 cmake git g++ dkms dpkg rsync glibc-devel glibc --allowerasing
   sudo ln -sf /usr/lib/dkms/lsb_release /usr/bin/lsb_release
