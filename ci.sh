@@ -75,11 +75,10 @@ function get_branch_code() {
   rm -rf ${SUB_LLVM_DIR}
   cd ${ROOT_DIR}/fe
   if [ "${LLVM_PRID}" != "" ]; then
-    git clone https://gitee.com/${LLVM_OWNER}/llvm-project.git
+    git clone -b ${LLVM_BRANCH} https://gitee.com/${LLVM_OWNER}/llvm-project.git
     cd ${SUB_LLVM_DIR}
     git remote add upstream https://gitee.com/bisheng_c_language_dep/llvm-project.git
     git fetch upstream
-    git checkout -b ${LLVM_BRANCH} origin/${LLVM_BRANCH}
     git rebase upstream/bishengc/12.0.1
   else
     git clone https://gitee.com/bisheng_c_language_dep/llvm-project.git
@@ -90,11 +89,10 @@ function get_branch_code() {
   rm -rf ${SUB_OAC_DIR}
   cd ${ROOT_DIR}/compiler
   if [ "${OAC_PRID}" != "" ]; then
-    git clone https://gitee.com/${OAC_OWNER}/OpenArkCompiler.git
+    git clone -b ${OAC_BRANCH} https://gitee.com/${OAC_OWNER}/OpenArkCompiler.git
     cd ${SUB_OAC_DIR}
     git remote add upstream https://gitee.com/bisheng_c_language_dep/OpenArkCompiler.git
     git fetch upstream
-    git checkout -b ${OAC_BRANCH} origin/${OAC_BRANCH}
     git rebase upstream/bishengc
   else
     git clone https://gitee.com/bisheng_c_language_dep/OpenArkCompiler.git
