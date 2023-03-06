@@ -61,7 +61,7 @@ function update_submodule() {
 function install_tools() {
   sudo yum clean all
   sudo yum makecache
-  sudo yum -y install python3 cmake git g++ dkms dpkg rsync glibc-devel glibc --allowerasing
+  sudo yum -y install python3 cmake git g++ dkms dpkg rsync glibc-devel glibc --nobest
   sudo ln -sf /usr/lib/dkms/lsb_release /usr/bin/lsb_release
   sudo cp -rf ${ROOT_DIR}/script/Centos-Base.repo /etc/yum.repos.d/
   sudo yum makecache
