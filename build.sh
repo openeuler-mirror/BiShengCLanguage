@@ -45,7 +45,7 @@ function copy_output() {
 
 function update_submodule() {
   cd ${ROOT_DIR}
-  git submodule update --init
+  git submodule update --init --progress
 }
 
 function main() {
