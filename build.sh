@@ -12,12 +12,22 @@ THREADS=$(cat /proc/cpuinfo | grep -c processor) # FIXME: this does not work for
 
 function build_llvm() {
   cd ${SUB_LLVM_DIR}
-  mkdir -p build
-  mkdir -p install
-  cd build
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install/ -DLLVM_TARGETS_TO_BUILD="X86;AArch64" -DLLVM_ENABLE_PROJECTS="clang;lld" -DLLVM_USE_LINKER=gold -DLLVM_BUILD_DOCS=Off -DLLVM_ENABLE_BINDINGS=Off -G "Unix Makefiles" ../llvm
-  make -j${THREADS} | tee ${ROOT_DIR}/build_llvm.log
-  make install
+  if [ -d "./build" ]
+  then
+    echo "./build folder already exists"
+    echo "Use previously built clang"
+    cd build
+    make -j${THREADS} | tee ${ROOT_DIR}/build_llvm.log
+    mkdir -p install
+    make install
+  else
+    mkdir -p build
+    mkdir -p install
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install/ -DLLVM_TARGETS_TO_BUILD="X86;AArch64" -DLLVM_ENABLE_PROJECTS="clang;lld" -DLLVM_USE_LINKER=gold -DLLVM_BUILD_DOCS=Off -DLLVM_ENABLE_BINDINGS=Off -G "Unix Makefiles" ../llvm
+    make -j${THREADS} | tee ${ROOT_DIR}/build_llvm.log
+    make install
+  fi
 }
 
 function copy_files() {
